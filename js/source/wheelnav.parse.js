@@ -14,6 +14,7 @@ wheelnav.prototype.parseWheel = function (holderDiv) {
             var parsedNavItems = [];
             var parsedNavItemsHref = [];
             var parsedNavItemsOnmouseup = [];
+            var parsedNavItemsShadowColor = [];
             var onlyInit = false;
 
             //data-wheelnav-slicepath
@@ -144,6 +145,7 @@ wheelnav.prototype.parseWheel = function (holderDiv) {
                 var wheelnavNavitemtext = holderDiv.children[i].getAttribute("data-wheelnav-navitemtext");
                 var wheelnavNavitemicon = holderDiv.children[i].getAttribute("data-wheelnav-navitemicon");
                 var wheelnavNavitemimg = holderDiv.children[i].getAttribute("data-wheelnav-navitemimg");
+                var wheelnavNavitemColor = holderDiv.children[i].getAttribute("data-wheelnav-navitemcolor");
                 if (wheelnavNavitemtext !== null ||
                     wheelnavNavitemicon !== null ||
                     wheelnavNavitemimg !== null) {
@@ -176,6 +178,12 @@ wheelnav.prototype.parseWheel = function (holderDiv) {
                         parsedNavItemsOnmouseup.push(null);
                     }
 
+                    if (wheelnavNavitemColor !== undefined) {
+                        parsedNavItemsShadowColor.push(wheelnavNavitemColor);
+                    } else {
+                        parsedNavItemsShadowColor.push(null);
+                    }
+
                     //parse inner <a> tag in navitem element for use href in navigateFunction
                     var foundHref = false;
                     for (var j = 0; j < holderDiv.children[i].children.length; j++) {
@@ -195,6 +203,8 @@ wheelnav.prototype.parseWheel = function (holderDiv) {
                 for (var i = 0; i < parsedNavItemsOnmouseup.length; i++) {
                     this.navItems[i].navigateFunction = parsedNavItemsOnmouseup[i];
                     this.navItems[i].navigateHref = parsedNavItemsHref[i];
+                    this.navItems[i].shadowColor = '#343434';
+                    this.navItems[i].selectedShadowColor = parsedNavItemsShadowColor[i];
                 }
 
                 if (!onlyInit) {

@@ -96,6 +96,9 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
     this.titleCurvedClockwise = null;
     this.titleCurvedByRotateAngle = null;
 
+    this.shadowColor = null;
+    this.selectedShadowColor = null;
+
     //Default navitem styles
     this.styleNavItem();
 
@@ -196,6 +199,17 @@ wheelnavItem.prototype.createNavItem = function () {
     this.navSlice.attr(this.slicePathAttr);
     this.navSlice.id = this.wheelnav.getSliceId(this.wheelItemIndex);
     this.navSlice.node.id = this.navSlice.id;
+
+    var shadowLen = 3;
+    var angle = this.currentRotateAngle * (Math.PI / 180);
+    var xOffset = Math.sin(angle) * shadowLen;
+    var yOffset = Math.cos(angle) * shadowLen;
+    if (this.shadowColor && ! this.selected) {
+        this.navSlice.shadow(xOffset, yOffset, 5, 1, this.shadowColor);
+    } else if (this.selectedShadowColor && this.selected) {
+        this.navSlice.shadow(xOffset, yOffset, 5, 1, this.selectedShadowColor);
+    }
+
 
     //Create linepath
     this.navLine = this.wheelnav.raphael.path(sliceInitPath.linePathString);
@@ -629,7 +643,14 @@ wheelnavItem.prototype.setTooltip = function (tooltip) {
 };
 
 wheelnavItem.prototype.refreshNavItem = function (withPathAndTransform) {
-
+    var filter = this.navSlice.data('filterId');
+    if (filter) {
+        delete FRaphael.filters[filter];
+        document.getElementById(filter).remove();
+        this.navSlice.removeData('filterId');
+        this.navSlice[0].removeAttribute('filter');
+    }
+    
     if (this.selected) {
         this.navSlice.attr(this.sliceSelectedAttr);
         this.navLine.attr(this.lineSelectedAttr);
@@ -648,6 +669,14 @@ wheelnavItem.prototype.refreshNavItem = function (withPathAndTransform) {
             this.navLine.toBack();
             this.navSlice.toBack();
         }
+        
+        if (this.selectedShadowColor) {
+            var shadowLen = 3;
+            var angle = this.currentRotateAngle * (Math.PI / 180);
+            var xOffset = Math.sin(angle) * shadowLen;
+            var yOffset = Math.cos(angle) * shadowLen;
+            this.navSlice.shadow(xOffset, yOffset, 5, 1, this.selectedShadowColor);
+        }
     }
     else if (this.hovered) {
         if (this.wheelnav.hoverEnable) {
@@ -662,6 +691,15 @@ wheelnavItem.prototype.refreshNavItem = function (withPathAndTransform) {
                 this.navTitle.toFront();
             }
             if (this.navClickableSlice !== null) { this.navClickableSlice.toFront(); }
+
+            
+        }
+        if (this.shadowColor) {
+            var shadowLen = 3;
+            var angle = this.currentRotateAngle * (Math.PI / 180);
+            var xOffset = Math.sin(angle) * shadowLen;
+            var yOffset = Math.cos(angle) * shadowLen;
+            this.navSlice.shadow(xOffset, yOffset, 3, 1, this.shadowColor);
         }
     }
     else {
@@ -674,6 +712,14 @@ wheelnavItem.prototype.refreshNavItem = function (withPathAndTransform) {
         this.navTitle.toBack();
         this.navLine.toBack();
         this.navSlice.toBack();
+
+        if (this.shadowColor) {
+            var shadowLen = 3;
+            var angle = this.currentRotateAngle * (Math.PI / 180);
+            var xOffset = Math.sin(angle) * shadowLen;
+            var yOffset = Math.cos(angle) * shadowLen;
+            this.navSlice.shadow(xOffset, yOffset, 3, 1, this.shadowColor);
+        }
     }
     
     if (withPathAndTransform !== undefined &&

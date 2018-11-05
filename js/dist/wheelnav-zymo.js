@@ -1,4 +1,3 @@
-﻿///#source 1 1 /js/source/wheelnav.core.js
 /* ======================================================================================= */
 /*                                   wheelnav.js - v1.8.0                                  */
 /* ======================================================================================= */
@@ -562,7 +561,6 @@ wheelnav.prototype.getMarkerId = function () {
     return "wheelnav-" + this.holderId + "-marker";
 };
 
-///#source 1 1 /js/source/wheelnav.parse.js
 /* ======================================================================================= */
 /* Parse html5 data- attributes, the onmouseup events and anchor links                     */
 /* ======================================================================================= */
@@ -579,6 +577,7 @@ wheelnav.prototype.parseWheel = function (holderDiv) {
             var parsedNavItems = [];
             var parsedNavItemsHref = [];
             var parsedNavItemsOnmouseup = [];
+            var parsedNavItemsShadowColor = [];
             var onlyInit = false;
 
             //data-wheelnav-slicepath
@@ -709,6 +708,7 @@ wheelnav.prototype.parseWheel = function (holderDiv) {
                 var wheelnavNavitemtext = holderDiv.children[i].getAttribute("data-wheelnav-navitemtext");
                 var wheelnavNavitemicon = holderDiv.children[i].getAttribute("data-wheelnav-navitemicon");
                 var wheelnavNavitemimg = holderDiv.children[i].getAttribute("data-wheelnav-navitemimg");
+                var wheelnavNavitemColor = holderDiv.children[i].getAttribute("data-wheelnav-navitemcolor");
                 if (wheelnavNavitemtext !== null ||
                     wheelnavNavitemicon !== null ||
                     wheelnavNavitemimg !== null) {
@@ -741,6 +741,12 @@ wheelnav.prototype.parseWheel = function (holderDiv) {
                         parsedNavItemsOnmouseup.push(null);
                     }
 
+                    if (wheelnavNavitemColor !== undefined) {
+                        parsedNavItemsShadowColor.push(wheelnavNavitemColor);
+                    } else {
+                        parsedNavItemsShadowColor.push(null);
+                    }
+
                     //parse inner <a> tag in navitem element for use href in navigateFunction
                     var foundHref = false;
                     for (var j = 0; j < holderDiv.children[i].children.length; j++) {
@@ -760,6 +766,8 @@ wheelnav.prototype.parseWheel = function (holderDiv) {
                 for (var i = 0; i < parsedNavItemsOnmouseup.length; i++) {
                     this.navItems[i].navigateFunction = parsedNavItemsOnmouseup[i];
                     this.navItems[i].navigateHref = parsedNavItemsHref[i];
+                    this.navItems[i].shadowColor = '#343434';
+                    this.navItems[i].selectedShadowColor = parsedNavItemsShadowColor[i];
                 }
 
                 if (!onlyInit) {
@@ -782,7 +790,6 @@ wheelnav.prototype.parseWheel = function (holderDiv) {
 };
 
 
-///#source 1 1 /js/source/wheelnav.navItem.js
 /* ======================================================================================= */
 /* Navigation item                                                                         */
 /* ======================================================================================= */
@@ -880,6 +887,9 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
     this.titleCurved = null;
     this.titleCurvedClockwise = null;
     this.titleCurvedByRotateAngle = null;
+
+    this.shadowColor = null;
+    this.selectedShadowColor = null;
 
     //Default navitem styles
     this.styleNavItem();
@@ -981,6 +991,17 @@ wheelnavItem.prototype.createNavItem = function () {
     this.navSlice.attr(this.slicePathAttr);
     this.navSlice.id = this.wheelnav.getSliceId(this.wheelItemIndex);
     this.navSlice.node.id = this.navSlice.id;
+
+    var shadowLen = 3;
+    var angle = this.currentRotateAngle * (Math.PI / 180);
+    var xOffset = Math.sin(angle) * shadowLen;
+    var yOffset = Math.cos(angle) * shadowLen;
+    if (this.shadowColor && ! this.selected) {
+        this.navSlice.shadow(xOffset, yOffset, 5, 1, this.shadowColor);
+    } else if (this.selectedShadowColor && this.selected) {
+        this.navSlice.shadow(xOffset, yOffset, 5, 1, this.selectedShadowColor);
+    }
+
 
     //Create linepath
     this.navLine = this.wheelnav.raphael.path(sliceInitPath.linePathString);
@@ -1414,7 +1435,14 @@ wheelnavItem.prototype.setTooltip = function (tooltip) {
 };
 
 wheelnavItem.prototype.refreshNavItem = function (withPathAndTransform) {
-
+    var filter = this.navSlice.data('filterId');
+    if (filter) {
+        delete FRaphael.filters[filter];
+        document.getElementById(filter).remove();
+        this.navSlice.removeData('filterId');
+        this.navSlice[0].removeAttribute('filter');
+    }
+    
     if (this.selected) {
         this.navSlice.attr(this.sliceSelectedAttr);
         this.navLine.attr(this.lineSelectedAttr);
@@ -1433,6 +1461,14 @@ wheelnavItem.prototype.refreshNavItem = function (withPathAndTransform) {
             this.navLine.toBack();
             this.navSlice.toBack();
         }
+        
+        if (this.selectedShadowColor) {
+            var shadowLen = 3;
+            var angle = this.currentRotateAngle * (Math.PI / 180);
+            var xOffset = Math.sin(angle) * shadowLen;
+            var yOffset = Math.cos(angle) * shadowLen;
+            this.navSlice.shadow(xOffset, yOffset, 5, 1, this.selectedShadowColor);
+        }
     }
     else if (this.hovered) {
         if (this.wheelnav.hoverEnable) {
@@ -1447,6 +1483,15 @@ wheelnavItem.prototype.refreshNavItem = function (withPathAndTransform) {
                 this.navTitle.toFront();
             }
             if (this.navClickableSlice !== null) { this.navClickableSlice.toFront(); }
+
+            
+        }
+        if (this.shadowColor) {
+            var shadowLen = 3;
+            var angle = this.currentRotateAngle * (Math.PI / 180);
+            var xOffset = Math.sin(angle) * shadowLen;
+            var yOffset = Math.cos(angle) * shadowLen;
+            this.navSlice.shadow(xOffset, yOffset, 3, 1, this.shadowColor);
         }
     }
     else {
@@ -1459,6 +1504,14 @@ wheelnavItem.prototype.refreshNavItem = function (withPathAndTransform) {
         this.navTitle.toBack();
         this.navLine.toBack();
         this.navSlice.toBack();
+
+        if (this.shadowColor) {
+            var shadowLen = 3;
+            var angle = this.currentRotateAngle * (Math.PI / 180);
+            var xOffset = Math.sin(angle) * shadowLen;
+            var yOffset = Math.cos(angle) * shadowLen;
+            this.navSlice.shadow(xOffset, yOffset, 3, 1, this.shadowColor);
+        }
     }
     
     if (withPathAndTransform !== undefined &&
@@ -1921,7 +1974,6 @@ wheelnavTitle.prototype.getTitleSizeTransform = function (titlewidth, titleheigh
     return transformAttr;
 };
 
-///#source 1 1 /js/source/wheelnav.style.js
 /* ======================================================================================= */
 /* Default styles and available css classes                                                */
 /* ======================================================================================= */
@@ -2008,7 +2060,6 @@ wheelnav.prototype.getMarkerCssClass = function () {
     return "wheelnav-" + this.holderId + "-marker";
 };
 
-///#source 1 1 /js/source/wheelnav.pathHelper.js
 /* ======================================================================================= */
 /* Slice path helper functions                                                                  */
 /* ======================================================================================= */
@@ -2222,7 +2273,6 @@ var markerPathCustomization = function () {
 };
 
 
-///#source 1 1 /js/source/slicePath/wheelnav.slicePath.js
 ///#source 1 1 /js/source/slicePath/wheelnav.slicePathStart.js
 /* ======================================================================================= */
 /* Slice path definitions.                                                                 */
@@ -2680,7 +2730,8 @@ this.MenuSlice = function (helper, percent, custom) {
         linePathString: linePathString,
         titlePosX: helper.titlePosX,
         titlePosY: helper.titlePosY,
-        titlePathString: titlePathString
+        titlePathString: titlePathString,
+        middleTheta: middleTheta
     };
 };
 
@@ -2699,7 +2750,8 @@ this.MenuSliceSelectedLine = function (helper, percent, custom) {
         linePathString: slicePath.linePathString,
         titlePosX: slicePath.titlePosX,
         titlePosY: slicePath.titlePosY,
-        titlePathString: slicePath.titlePathString
+        titlePathString: slicePath.titlePathString,
+        middleTheta: middleTheta
     };
 };
 
@@ -2712,7 +2764,8 @@ this.MenuSliceWithoutLine = function (helper, percent, custom) {
         linePathString: "",
         titlePosX: slicePath.titlePosX,
         titlePosY: slicePath.titlePosY,
-        titlePathString: slicePath.titlePathString
+        titlePathString: slicePath.titlePathString,
+        middleTheta: middleTheta
     };
 };
 
@@ -3173,7 +3226,6 @@ this.TutorialSlice = function (helper, percent, custom) {
 
 
 
-///#source 1 1 /js/source/wheelnav.sliceTransform.js
 /* ======================================================================================== */
 /* Slice transform definitions                                                              */
 /* ======================================================================================== */
@@ -3335,7 +3387,6 @@ var sliceTransformCustomization = function () {
 
 
 
-///#source 1 1 /js/source/spreader/wheelnav.spreader.js
 ///#source 1 1 /js/source/spreader/wheelnav.spreader.core.js
 /* ======================================================================================= */
 /* Spreader of wheel                                                                       */
@@ -3872,7 +3923,6 @@ this.LineSpreader = function (helper, percent, custom) {
 
 
 
-///#source 1 1 /js/source/marker/wheelnav.marker.js
 ///#source 1 1 /js/source/marker/wheelnav.marker.core.js
 /* ======================================================================================= */
 /* Marker of wheel                                                                         */
@@ -4178,7 +4228,6 @@ this.DropMarker = function (helper, percent, custom) {
 
 
 
-///#source 1 1 /js/source/wheelnav.colorPalettes.js
 /* ======================================================================================== */
 /* Color palettes for slices from http://www.colourlovers.com                               */
 /* ======================================================================================== */

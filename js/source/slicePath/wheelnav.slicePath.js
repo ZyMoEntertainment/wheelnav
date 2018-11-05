@@ -455,7 +455,8 @@ this.MenuSlice = function (helper, percent, custom) {
         linePathString: linePathString,
         titlePosX: helper.titlePosX,
         titlePosY: helper.titlePosY,
-        titlePathString: titlePathString
+        titlePathString: titlePathString,
+        middleTheta: middleTheta
     };
 };
 
@@ -474,7 +475,8 @@ this.MenuSliceSelectedLine = function (helper, percent, custom) {
         linePathString: slicePath.linePathString,
         titlePosX: slicePath.titlePosX,
         titlePosY: slicePath.titlePosY,
-        titlePathString: slicePath.titlePathString
+        titlePathString: slicePath.titlePathString,
+        middleTheta: middleTheta
     };
 };
 
@@ -487,7 +489,8 @@ this.MenuSliceWithoutLine = function (helper, percent, custom) {
         linePathString: "",
         titlePosX: slicePath.titlePosX,
         titlePosY: slicePath.titlePosY,
-        titlePathString: slicePath.titlePathString
+        titlePathString: slicePath.titlePathString,
+        middleTheta: middleTheta
     };
 };
 

@@ -1,0 +1,21 @@
+[
+  {
+    "outputFileName": "wheelnav-zymo.js",
+    "inputFiles": [
+      "./js/source/wheelnav.core.js",
+      "./js/source/wheelnav.parse.js",
+      "./js/source/wheelnav.navItem.js",
+      "./js/source/wheelnav.style.js",
+      "./js/source/wheelnav.pathHelper.js",
+      "./js/source/slicePath/wheelnav.slicePath.js",
+      "./js/source/wheelnav.sliceTransform.js",
+      "./js/source/spreader/wheelnav.spreader.js",
+      "./js/source/marker/wheelnav.marker.js",
+      "./js/source/wheelnav.colorPalettes.js"
+    ],
+    "minify": {
+      "enabled": false,
+      "commentMode": "all"
+    }
+  }
+]
