@@ -1,0 +1,14 @@
+/Users/steve.krenek/work/village/wheelnav-proj/bin/Debug/netcoreapp2.1/wheelnav-proj.deps.json
+/Users/steve.krenek/work/village/wheelnav-proj/bin/Debug/netcoreapp2.1/wheelnav-proj.runtimeconfig.json
+/Users/steve.krenek/work/village/wheelnav-proj/bin/Debug/netcoreapp2.1/wheelnav-proj.runtimeconfig.dev.json
+/Users/steve.krenek/work/village/wheelnav-proj/bin/Debug/netcoreapp2.1/wheelnav-proj.dll
+/Users/steve.krenek/work/village/wheelnav-proj/bin/Debug/netcoreapp2.1/wheelnav-proj.pdb
+/Users/steve.krenek/work/village/wheelnav-proj/obj/Debug/netcoreapp2.1/wheelnav-proj.csprojAssemblyReference.cache
+/Users/steve.krenek/work/village/wheelnav-proj/obj/Debug/netcoreapp2.1/wheelnav-proj.csproj.CoreCompileInputs.cache
+/Users/steve.krenek/work/village/wheelnav-proj/obj/Debug/netcoreapp2.1/wheelnav-proj.RazorAssemblyInfo.cache
+/Users/steve.krenek/work/village/wheelnav-proj/obj/Debug/netcoreapp2.1/wheelnav-proj.RazorAssemblyInfo.cs
+/Users/steve.krenek/work/village/wheelnav-proj/obj/Debug/netcoreapp2.1/wheelnav-proj.AssemblyInfoInputs.cache
+/Users/steve.krenek/work/village/wheelnav-proj/obj/Debug/netcoreapp2.1/wheelnav-proj.AssemblyInfo.cs
+/Users/steve.krenek/work/village/wheelnav-proj/obj/Debug/netcoreapp2.1/wheelnav-proj.RazorTargetAssemblyInfo.cache
+/Users/steve.krenek/work/village/wheelnav-proj/obj/Debug/netcoreapp2.1/wheelnav-proj.dll
+/Users/steve.krenek/work/village/wheelnav-proj/obj/Debug/netcoreapp2.1/wheelnav-proj.pdb

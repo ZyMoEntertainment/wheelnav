@@ -96,6 +96,9 @@ wheelnavItem = function (wheelnav, title, itemIndex) {
     this.titleCurvedClockwise = null;
     this.titleCurvedByRotateAngle = null;
 
+    this.shadowColor = null;
+    this.selectedShadowColor = null;
+
     //Default navitem styles
     this.styleNavItem();
 
@@ -196,6 +199,10 @@ wheelnavItem.prototype.createNavItem = function () {
     this.navSlice.attr(this.slicePathAttr);
     this.navSlice.id = this.wheelnav.getSliceId(this.wheelItemIndex);
     this.navSlice.node.id = this.navSlice.id;
+
+    if (this.shadowColor) {
+        this.navSlice.shadow(0, 3, 20, 1, this.shadowColor);
+    }
 
     //Create linepath
     this.navLine = this.wheelnav.raphael.path(sliceInitPath.linePathString);
